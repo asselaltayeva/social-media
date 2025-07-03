@@ -1,11 +1,13 @@
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useState } from "react";
 import Hamburger from "./Icons/Hamburger";
 import { useAuth } from "../context/AuthContext";
+import { LogOut } from "lucide-react";
 
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { signInWithGithub, signOut, user } = useAuth();
+  const location = useLocation();
 
   const displayName = user?.user_metadata?.user_name || user?.email;
 
@@ -17,27 +19,31 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur border-b border-white/10 shadow-sm">
-      <div className="max-w-5xl mx-auto px-4">
+    <nav className="fixed top-0 z-50 w-full bg-[rgba(15,15,15,0.85)] backdrop-blur border-b border-white/10 shadow-md">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="font-mono text-xl font-bold text-white">
+          <Link to="/" className="text-2xl font-semibold font-mono text-white">
             social<span className="text-green-400">.media</span>
           </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6">
             {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
-                className="text-gray-300 hover:text-white transition-colors duration-150"
+                className={`text-base px-2 py-1 transition rounded ${
+                  location.pathname === to
+                    ? "text-white font-semibold"
+                    : "text-gray-400 hover:text-white"
+                }`}
               >
                 {label}
               </Link>
             ))}
           </div>
 
-          {/* Auth */}
+          {/* Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
@@ -45,21 +51,22 @@ export const Navbar = () => {
                   <img
                     src={user.user_metadata.avatar_url}
                     alt="Avatar"
-                    className="w-8 h-8 rounded-full object-cover"
+                    className="w-8 h-8 rounded-full object-cover ring-1 ring-white/10 hover:ring-green-400 transition"
                   />
                 )}
-                <span className="text-gray-300 text-sm">{displayName}</span>
+                <span className="text-gray-300 text-base">{displayName}</span>
                 <button
                   onClick={signOut}
-                  className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition"
+                  className="p-2 rounded hover:bg-red-500/10 hover:text-red-400 transition"
+                  title="Logout"
                 >
-                  Sign Out
+                  <LogOut size={20} />
                 </button>
               </>
             ) : (
               <button
                 onClick={signInWithGithub}
-                className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition"
+                className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded transition"
               >
                 Sign in with GitHub
               </button>
@@ -78,28 +85,34 @@ export const Navbar = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[rgba(10,10,10,0.95)] border-t border-white/10">
+        <div className="md:hidden bg-[rgba(10,10,10,0.95)] backdrop-blur-sm border-t border-white/10 shadow-inner">
           <div className="px-4 py-4 space-y-2">
             {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
-                className="block text-gray-300 hover:text-white hover:bg-gray-700 rounded px-3 py-2 transition"
                 onClick={() => setMenuOpen(false)}
+                className={`block text-sm rounded px-3 py-2 transition ${
+                  location.pathname === to
+                    ? "bg-gray-800 text-white font-medium"
+                    : "text-gray-300 hover:text-white hover:bg-gray-700"
+                }`}
               >
                 {label}
               </Link>
             ))}
-            <div className="mt-4">
+
+            <div className="pt-4 border-t border-white/10">
               {user ? (
                 <button
                   onClick={() => {
                     signOut();
                     setMenuOpen(false);
                   }}
-                  className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
+                  className="flex items-center gap-2 w-full bg-red-500/10 text-red-400 py-2 px-4 rounded hover:bg-red-500/20 transition"
                 >
-                  Sign Out
+                  <LogOut size={18} />
+                  <span className="text-sm">Logout</span>
                 </button>
               ) : (
                 <button
@@ -107,7 +120,7 @@ export const Navbar = () => {
                     signInWithGithub();
                     setMenuOpen(false);
                   }}
-                  className="w-full bg-green-400 text-white py-2 rounded hover:bg-green-700 transition"
+                  className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
                 >
                   Sign in with GitHub
                 </button>
