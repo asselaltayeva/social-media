@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router";
 import { Home } from "./pages/Home";
 import { Navbar } from "./components/Navbar";
 import { CreatePostPage } from "./pages/CreatePostPage";
+import { PostPage } from "./pages/PostPage";
 
 
 function App() {
@@ -12,8 +13,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<CreatePostPage />} />
-          {/* <Route path="/post/:id" element={<PostPage />} />
-          <Route path="/community/create" element={<CreateCommunityPage />} />
+          <Route path="/post/:id" element={<PostPage />} />
+          {/* <Route path="/community/create" element={<CreateCommunityPage />} />
           <Route path="/communities" element={<CommunitiesPage />} />
           <Route path="/community/:id" element={<CommunityPage />} /> */}
         </Routes>

@@ -1,10 +1,14 @@
 import { useState, type ChangeEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
+import { useAuth } from "../context/AuthContext";
+const DEFAULT_AVATAR_URL = "https://eldelrdijnvrdxrlqwph.supabase.co/storage/v1/object/public/default/default.jpg";
+
 
 interface PostInput {
   title: string;
   content: string;
+  avatar_url?: string | null;
 }
 
 const createPost = async (post: PostInput, imageFile: File) => {
@@ -38,6 +42,8 @@ export const CreatePost = () => {
   const [content, setContent] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  const {user} = useAuth();
+
   const {
     mutate,
     isPending,
@@ -57,7 +63,7 @@ export const CreatePost = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedFile) return;
-    mutate({ post: { title, content }, imageFile: selectedFile });
+    mutate({ post: { title, content, avatar_url: user?.user_metadata.avatar_url || DEFAULT_AVATAR_URL}, imageFile: selectedFile });
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
