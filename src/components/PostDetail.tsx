@@ -35,24 +35,37 @@ export const PostDetail = ({ postId }: Props) => {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-        {data?.title}
-      </h2>
-      {data?.image_url && (
+    <div className="space-y-6 rounded-2xl bg-black/30 backdrop-blur-md border border-white/10 p-6 shadow-md">
+    <h2 className="text-5xl font-bold text-center bg-gradient-to-r from-green-400 via-white to-green-600 bg-clip-text text-transparent drop-shadow-md">
+      {data?.title}
+    </h2>
+  
+    {data?.image_url && (
+      <div className="overflow-hidden rounded-xl border border-white/10 shadow-inner">
         <img
           src={data.image_url}
           alt={data?.title}
-          className="mt-4 rounded object-cover w-full h-64"
+          className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
         />
-      )}
-      <p className="text-gray-400">{data?.content}</p>
-      <p className="text-gray-500 text-sm">
-        Posted on: {new Date(data!.created_at).toLocaleDateString()}
-      </p>
-
+      </div>
+    )}
+  
+    <p className="text-gray-300 text-lg leading-relaxed">{data?.content}</p>
+  
+    <p className="text-gray-500 text-sm">
+      Posted on:{" "}
+      <span className="text-white/70">
+        {new Date(data!.created_at).toLocaleDateString()}
+      </span>
+    </p>
+  
+    <div className="pt-2 border-t border-white/10">
       <LikeButton postId={postId} />
-      <CommentSection postId={postId} />
+      <div className="mt-4">
+        <CommentSection postId={postId} />
+      </div>
     </div>
+  </div>
+  
   );
 };

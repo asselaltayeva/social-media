@@ -1,49 +1,70 @@
 import { Link } from "react-router";
 import type { Post } from "./PostList";
+import { useAuth } from "../context/AuthContext"; 
 
 interface Props {
   post: Post;
 }
 
 export const PostItem = ({ post }: Props) => {
-  return (
-    <div className="relative group">
-      <div className="absolute -inset-1 rounded-[20px] bg-gradient-to-r from-pink-600 to-purple-600 blur-sm opacity-0 group-hover:opacity-50 transition duration-300 pointer-events-none"></div>
-      <Link to={`/post/${post.id}`} className="block relative z-10">
-        <div className="w-80 h-76 bg-[rgb(24,27,32)] border border-[rgb(84,90,106)] rounded-[20px] text-white flex flex-col p-5 overflow-hidden transition-colors duration-300 group-hover:bg-gray-800">
-          {/* Header: Avatar and Title */}
-          <div className="flex items-center space-x-2">
-            {post.avatar_url ? (
-              <img
-                src={post.avatar_url}
-                alt="User Avatar"
-                className="w-[35px] h-[35px] rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-[35px] h-[35px] rounded-full bg-gradient-to-tl from-[#8A2BE2] to-[#491F70]" />
-            )}
-            <div className="flex flex-col flex-1">
-              <div className="text-[20px] leading-[22px] font-semibold mt-2">
-                {post.title}
-              </div>
-            </div>
-          </div>
+  const { user } = useAuth(); 
 
-          {/* Image Banner */}
-          <div className="mt-2 flex-1">
+  const avatarUrl =
+    user?.user_metadata?.avatar_url || post.avatar_url || ""; 
+  const userName = user?.user_metadata?.user_name || "Anonymous";
+
+  return (
+    <div className="relative group max-w-3xl mx-auto">
+      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-lime-900 to-green-800 blur-lg opacity-0 group-hover:opacity-40 transition duration-300 pointer-events-none" />
+
+      <Link
+        to={`/post/${post.id}`}
+        className="relative z-10 flex flex-col sm:flex-row w-full overflow-hidden rounded-2xl bg-black/30 backdrop-blur-md border border-white/40 hover:border-white/20 transition-shadow duration-300"
+      >
+        {post.image_url && (
+          <div className="sm:w-[40%] h-[200px] sm:h-auto overflow-hidden">
             <img
               src={post.image_url}
               alt={post.title}
-              className="w-full rounded-[20px] object-cover max-h-[150px] mx-auto"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
-          <div className="flex justify-around items-center">
-            <span className="cursor-pointer h-10 w-[50px] px-1 flex items-center justify-center font-extrabold rounded-lg">
-              ❤️ <span className="ml-2">{post.like_count ?? 0}</span>
-            </span>
-            <span className="cursor-pointer h-10 w-[50px] px-1 flex items-center justify-center font-extrabold rounded-lg">
-              💬 <span className="ml-2">{post.comment_count ?? 0}</span>
-            </span>
+        )}
+
+        <div className="p-5 flex flex-col justify-between flex-1">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="avatar"
+                  className="w-6 h-6 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#8A2BE2] to-[#491F70]" />
+              )}
+              <span className="font-medium text-sm sm:text-base text-white">{userName}</span>
+              <span className="mx-1">•</span>
+              <span>
+                {new Date(post.created_at).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            </div>
+
+            <h3 className="text-2xl font-bold text-white group-hover:text-green-400 transition line-clamp-2">
+              {post.title}
+            </h3>
+
+            <p className="text-sm text-gray-400 line-clamp-3">
+              {post.content?.slice(0, 120) || "No content preview."}
+            </p>
+          </div>
+
+          <div className="mt-4 flex gap-6 text-sm justify-end text-gray-500">
+            <span>❤️ {post.like_count ?? 0}</span>
+            <span>💬 {post.comment_count ?? 0}</span>
           </div>
         </div>
       </Link>
