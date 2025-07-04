@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import { supabase } from "../supabase-client";
 import { CommentItem } from "./CommentItem";
+import { Send } from "lucide-react";
 
 interface Props {
     postId: number;
@@ -134,23 +135,30 @@ export const CommentSection = ({ postId }: Props) => {
         {/* Create Comment Section */}
         {user ? (
           <form onSubmit={handleSubmit} className="mb-4">
+          <div className="relative w-full">
             <textarea
               value={newCommentText}
               onChange={(e) => setNewCommentText(e.target.value)}
-              className="w-full border border-white/10 bg-transparent p-2 rounded"
-              placeholder="Write a comment..."
               rows={3}
+              placeholder="Write a comment..."
+              className="w-full resize-none rounded-md border border-white/10 bg-transparent p-3 pr-12 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <button
               type="submit"
-              className="mt-2 bg-green-500 text-white px-4 py-2 rounded cursor-pointer"
+              disabled={!newCommentText || isPending}
+              aria-label="Post comment"
+              className={`absolute bottom-3 right-3 p-1 rounded-md transition-opacity
+                ${newCommentText ? "opacity-90 hover:opacity-100" : "opacity-30 cursor-default"}
+                bg-white/10 text-white`}
             >
-              {isPending ? "Posting..." : "Post Comment"}
+              <Send size={18} />
             </button>
-            {isError && (
-              <p className="text-red-500 mt-2">Error posting comment.</p>
-            )}
-          </form>
+          </div>
+          {isError && (
+            <p className="text-red-500 mt-2">Error posting comment.</p>
+          )}
+        </form>
+        
         ) : (
           <p className="mb-4 text-gray-600">
             You must be logged in to post a comment.

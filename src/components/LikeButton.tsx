@@ -22,50 +22,30 @@ const vote = async (voteValue: number, postId: number, userId: string) => {
     .maybeSingle();
 
   if (existingVote) {
-    // Liked -> 0, Like -> -1
     if (existingVote.vote === voteValue) {
-      const { error } = await supabase
-        .from("votes")
-        .delete()
-        .eq("id", existingVote.id);
-
+      const { error } = await supabase.from("votes").delete().eq("id", existingVote.id);
       if (error) throw new Error(error.message);
     } else {
-      const { error } = await supabase
-        .from("votes")
-        .update({ vote: voteValue })
-        .eq("id", existingVote.id);
-
+      const { error } = await supabase.from("votes").update({ vote: voteValue }).eq("id", existingVote.id);
       if (error) throw new Error(error.message);
     }
   } else {
-    const { error } = await supabase
-      .from("votes")
-      .insert({ post_id: postId, user_id: userId, vote: voteValue });
+    const { error } = await supabase.from("votes").insert({ post_id: postId, user_id: userId, vote: voteValue });
     if (error) throw new Error(error.message);
   }
 };
 
 const fetchVotes = async (postId: number): Promise<Vote[]> => {
-  const { data, error } = await supabase
-    .from("votes")
-    .select("*")
-    .eq("post_id", postId);
-
+  const { data, error } = await supabase.from("votes").select("*").eq("post_id", postId);
   if (error) throw new Error(error.message);
   return data as Vote[];
 };
 
 export const LikeButton = ({ postId }: Props) => {
   const { user } = useAuth();
-
   const queryClient = useQueryClient();
 
-  const {
-    data: votes,
-    isLoading,
-    error,
-  } = useQuery<Vote[], Error>({
+  const { data: votes, isLoading, error } = useQuery<Vote[], Error>({
     queryKey: ["votes", postId],
     queryFn: () => fetchVotes(postId),
     refetchInterval: 5000,
@@ -76,41 +56,44 @@ export const LikeButton = ({ postId }: Props) => {
       if (!user) throw new Error("You must be logged in to Vote!");
       return vote(voteValue, postId, user.id);
     },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["votes", postId] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["votes", postId] }),
   });
 
-  if (isLoading) {
-    return <div> Loading votes...</div>;
-  }
+  if (isLoading) return <div className="text-gray-500">Loading votes...</div>;
+  if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
-  if (error) {
-    return <div> Error: {error.message}</div>;
-  }
-
-  const likes = votes?.filter((v) => v.vote === 1).length || 0;
-  const dislikes = votes?.filter((v) => v.vote === -1).length || 0;
+  const likes = votes?.filter((v) => v.vote === 1).length ?? 0;
+  const dislikes = votes?.filter((v) => v.vote === -1).length ?? 0;
   const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
+  const baseBtn =
+    "flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-colors duration-200 select-none";
+
   return (
-    <div className="flex items-center space-x-4 my-4">
+    <div className="flex items-center space-x-6 mt-4">
       <button
         onClick={() => mutate(1)}
-        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
-          userVote === 1 ? "bg-green-500 text-white" : "bg-gray-200 text-black"
+        className={`${baseBtn} ${
+          userVote === 1
+            ? "bg-gradient-to-r from-lime-600 to-green-700 text-white shadow-[0_0_8px_#22c55e]"
+            : "bg-black/30 text-green-400 cursor-pointer"
         }`}
+        aria-label="Like"
+        title="Like"
       >
-        👍 {likes}
+        <span className="text-xl">👍</span> {likes}
       </button>
       <button
         onClick={() => mutate(-1)}
-        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
-          userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
+        className={`${baseBtn} ${
+          userVote === -1
+            ? "bg-gradient-to-r from-red-600 to-red-800 text-white shadow-[0_0_8px_#ef4444]"
+            : "bg-black/30 text-red-400 cursor-pointer"
         }`}
+        aria-label="Dislike"
+        title="Dislike"
       >
-        👎 {dislikes}
+        <span className="text-xl">👎</span> {dislikes}
       </button>
     </div>
   );

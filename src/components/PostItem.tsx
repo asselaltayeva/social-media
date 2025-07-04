@@ -31,8 +31,8 @@ export const PostItem = ({ post }: Props) => {
           </div>
         )}
 
-        <div className="p-5 flex flex-col justify-between flex-1">
-          <div className="space-y-2">
+        <div className="p-6 flex flex-col justify-between flex-1">
+          <div className="space-y-4">
             <div className="flex items-center gap-2 text-xs text-gray-500">
               {avatarUrl ? (
                 <img
@@ -53,14 +53,15 @@ export const PostItem = ({ post }: Props) => {
               </span>
             </div>
 
-            <h3 className="text-2xl font-bold text-white group-hover:text-green-400 transition line-clamp-2">
-              {post.title}
-            </h3>
 
-            <p className="text-sm text-gray-400 line-clamp-3">
-              {post.content?.slice(0, 120) || "No content preview."}
+            <h3 className="text-xl font-semibold text-white group-hover:text-green-500 transition line-clamp-2">
+                {post.title}
+                </h3>
+            <p className="text-base text-gray-400 leading-relaxed"
+             style={{ textAlign: "justify" }}>
+            {post.content?.slice(0, 370) || "No content preview."}
             </p>
-          </div>
+            </div>
 
           <div className="mt-4 flex gap-6 text-sm justify-end text-gray-500">
             <span>❤️ {post.like_count ?? 0}</span>

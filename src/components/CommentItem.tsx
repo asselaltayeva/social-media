@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabase-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Arrow  from "./Icons/Arrow"
+import { Send } from "lucide-react";
 
 interface Props {
   comment: Comment & {
@@ -68,9 +69,8 @@ export const CommentItem = ({ comment, postId }: Props) => {
     <div className="pl-4 border-l border-white/10">
       <div className="mb-2">
         <div className="flex items-center space-x-2">
-          {/* Display the commenter's username */}
-          <span className="text-sm font-bold text-blue-400">
-            {comment.author}
+          <span className="text-base font-medium text-white">
+            {"@"}{comment.author}
           </span>
           <span className="text-xs text-gray-500">
             {new Date(comment.created_at).toLocaleString()}
@@ -79,28 +79,36 @@ export const CommentItem = ({ comment, postId }: Props) => {
         <p className="text-gray-300">{comment.content}</p>
         <button
           onClick={() => setShowReply((prev) => !prev)}
-          className="text-blue-500 text-sm mt-1"
+          className="text-green-500 text-sm mt-1"
         >
           {showReply ? "Cancel" : "Reply"}
         </button>
       </div>
       {showReply && user && (
         <form onSubmit={handleReplySubmit} className="mb-2">
+        <div className="relative w-full">
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
-            className="w-full border border-white/10 bg-transparent p-2 rounded"
-            placeholder="Write a reply..."
             rows={2}
+            placeholder="Write a reply..."
+            className="w-full resize-none rounded-md border border-white/10 bg-transparent p-2 pr-12 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           <button
             type="submit"
-            className="mt-1 bg-blue-500 text-white px-3 py-1 rounded"
+            disabled={!replyText || isPending}
+            aria-label="Post reply"
+            className={`absolute bottom-2 right-2 p-1 rounded-md transition-opacity
+              ${replyText ? "opacity-90 hover:opacity-100" : "opacity-30 cursor-default"}
+              bg-white/10 text-white`}
           >
-            {isPending ? "Posting..." : "Post Reply"}
+            <Send size={18} />
           </button>
-          {isError && <p className="text-red-500">Error posting reply.</p>}
-        </form>
+        </div>
+        {isError && (
+          <p className="text-red-500 mt-1">Error posting reply.</p>
+        )}
+      </form>
       )}
     
           {comment.children && comment.children.length > 0 && (
