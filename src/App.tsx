@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router";
 import { Home } from "./pages/Home";
 import { Navbar } from "./components/Navbar";
 import { CreatePostPage } from "./pages/CreatePostPage";
-import { PostPage } from "./pages/PostPage";
+import PostPage from "./pages/PostPage";
 
 
 function App() {

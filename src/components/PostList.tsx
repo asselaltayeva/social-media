@@ -14,13 +14,14 @@ export interface Post {
 }
 
 const fetchPosts = async (): Promise<Post[]> => {
-  const { data, error } = await supabase.rpc("get_posts_with_counts");
-
-  if (error) throw new Error(error.message);
-
-  return data as Post[];
-};
-
+    const { data, error } = await supabase.rpc("get_posts_with_counts");
+    if (error) {
+      console.error("Error fetching posts:", error.message);
+      throw new Error(error.message);
+    }
+    return data as Post[];
+  };
+  
 export const PostList = () => {
   const { data, error, isLoading } = useQuery<Post[], Error>({
     queryKey: ["posts"],
