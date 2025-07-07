@@ -1,14 +1,16 @@
 import { useState, type ChangeEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
+import { fetchCommunities, type Community } from "./CommunityList";
 const DEFAULT_AVATAR_URL = "https://eldelrdijnvrdxrlqwph.supabase.co/storage/v1/object/public/default/default.jpg";
-
+import { Check } from "lucide-react";
 
 interface PostInput {
   title: string;
   content: string;
   avatar_url?: string | null;
+  community_id?: number | null;
 }
 
 const createPost = async (post: PostInput, imageFile: File) => {
@@ -41,8 +43,14 @@ export const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [communityId, setCommunityId] = useState <number | null>(null);
 
   const {user} = useAuth();
+
+  const { data: communities } = useQuery<Community[], Error>({
+    queryKey: ["communities"],
+    queryFn: fetchCommunities,
+  });
 
   const {
     mutate,
@@ -63,7 +71,11 @@ export const CreatePost = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedFile) return;
-    mutate({ post: { title, content, avatar_url: user?.user_metadata.avatar_url || DEFAULT_AVATAR_URL}, imageFile: selectedFile });
+    mutate({ post: { 
+      title, 
+      content, 
+      avatar_url: user?.user_metadata.avatar_url || DEFAULT_AVATAR_URL,
+      community_id: communityId}, imageFile: selectedFile });
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +123,39 @@ export const CreatePost = () => {
           />
         </div>
 
+        <div className="group">
+          <label className="block text-xs uppercase tracking-wide text-gray-400 mb-1">
+            Community
+          </label>
+        <div className="flex flex-wrap gap-1">
+        {communities?.map((community) => {
+        const selected = communityId === community.id;
+        return (
+          <button
+            key={community.id}
+            type="button"
+            onClick={() => setCommunityId(selected ? null : community.id)}
+            className={`
+              flex items-center gap-2 px-2 py-1 rounded-sm
+              border border-transparent transition-colors duration-200
+            `}
+          >
+            <span
+              className={`
+                flex items-center justify-center w-5 h-5 rounded-sm border
+                transition-colors duration-200
+                ${selected ? "text-white" : "border-white/30"}
+              `}>
+                  {selected && <Check size={16} strokeWidth={3} />}
+                </span>
+                <span className="text-white/90 font-mono text-sm/tight whitespace-nowrap">
+                  {community.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     
         <div className="group">
             <label className="block text-xs uppercase tracking-wide text-gray-400 mb-2">
