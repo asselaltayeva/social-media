@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Post } from "./PostList";
 import { supabase } from "../supabase-client";
+import { PostItem } from "./PostItem";
+
 
 interface Props {
     communityId: number;
@@ -40,5 +42,23 @@ export const CommunityDisplay = ({communityId} : Props) =>{
           </div>
         );
       }
-    return <div>{ data && data[0].communities.name}</div>
-}
+
+    return (
+  <>
+    <div>
+      {data && data[0].communities.name}
+    </div>
+
+    {data && data.length > 0 ? (
+      <div>
+        {data.map((post, key) => (
+          <PostItem key={key} post={post} />
+        ))}
+      </div>
+    ) : (
+      <p>No posts yet</p>
+    )}
+  </>
+);
+
+};

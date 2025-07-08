@@ -2,7 +2,7 @@ import { CreatePost } from "../components/CreatePost";
 
 export const CreatePostPage = () => {
   return (
-    <div className="min-h-screen pt-28 px-4 bg-black relative overflow-hidden">
+    <div className="min-h-screen pt-16 px-4 bg-black relative overflow-hidden">
       <div className="absolute inset-0 z-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15),transparent_40%)] pointer-events-none" />
 
       <div className="relative z-10 text-center mb-12 animate-fade-in">

@@ -104,7 +104,7 @@ export const CreatePost = () => {
             value={title}
             required
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter a clear, descriptive title..."
+            placeholder="Enter a clear title..."
             className="w-full px-4 py-2 bg-black/30 border border-white/10 text-white placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
         </div>
@@ -125,7 +125,7 @@ export const CreatePost = () => {
 
         <div className="group">
           <label className="block text-xs uppercase tracking-wide text-gray-400 mb-1">
-            Community
+            Community Tags
           </label>
         <div className="flex flex-wrap gap-1">
         {communities?.map((community) => {

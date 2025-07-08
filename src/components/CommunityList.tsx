@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { Link } from "react-router";
+import { BookOpen, Users, Globe, Sparkles, Atom, Landmark } from "lucide-react";
 
 export interface Community {
   id: number;
@@ -26,7 +27,7 @@ export const CommunityList = () => {
   });
 
   if (isLoading) {
-    return <div className="text-center text-gray-400 py-10">Loading communities...</div>;
+    return <div className="text-center text-gray-500 py-12 animate-pulse">Loading communities...</div>;
   }
 
   if (error) {
@@ -37,30 +38,62 @@ export const CommunityList = () => {
     );
   }
 
-  return (
-    <div className="flex flex-col gap-8 max-w-3xl mx-auto px-4">
-      {data?.map((community, key) => (
-        <div key={key} className="relative group">
-          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-lime-900 to-green-800 blur-lg opacity-0 group-hover:opacity-40 transition duration-300 pointer-events-none" />
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-center text-gray-500 italic py-12">
+        No communities yet.{" "}
+        <Link
+          to="/create-community"
+          className="text-green-400 underline underline-offset-4 hover:text-green-300 transition"
+        >
+          Create one now →
+        </Link>
+      </div>
+    );
+  }
 
-          <Link
-            to={`/community/${community.id}`}
-            className="relative z-10 flex flex-col w-full overflow-hidden rounded-2xl bg-black/30 backdrop-blur-md border border-white/20 hover:border-white/30 transition-shadow duration-300"
-          >
-            <div className="p-6 space-y-4">
-              <h3 className="text-xl font-semibold text-white group-hover:text-green-400 transition line-clamp-2">
-                {community.name}
-              </h3>
-              <p
-                className="text-gray-400 text-sm leading-relaxed"
-                style={{ textAlign: "justify" }}
-              >
-                {community.description || "No description available."}
-              </p>
-            </div>
-          </Link>
-        </div>
-      ))}
+  const iconMap = [BookOpen, Users, Globe, Sparkles, Atom, Landmark];
+
+  return (
+    <div className="max-w-5xl mx-auto px-4">
+      <h2 className="text-xl font-semibold text-white mb-6">Browse Communities</h2>
+
+   
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {data.map((community, i) => {
+          const Icon = iconMap[i % iconMap.length];
+          return (
+            <Link
+              key={community.id}
+              to={`/community/${community.id}`}
+              className="group flex items-start gap-4 bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 hover:shadow-lg hover:scale-[1.02] transition-all duration-200 rounded-2xl p-4"
+            >
+              <div className="text-green-400 mt-1">
+                <Icon className="w-6 h-6" />
+              </div>
+              <div className="flex flex-col">
+                <h3 className="text-white font-medium text-lg group-hover:text-green-400 transition">
+                  {community.name}
+                </h3>
+                <p className="text-sm text-gray-400 line-clamp-2">
+                  {community.description || "No description available."}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      
+      <div className="mt-10 text-center text-sm text-gray-400">
+        <span>Not on the tag list?</span>{" "}
+        <Link
+          to="/community/create"
+          className="text-green-400 underline underline-offset-4 hover:text-green-300 transition"
+        >
+          Create one now →
+        </Link>
+      </div>
     </div>
   );
 };

@@ -61,7 +61,6 @@ export const PostDetail = ({ postId }: Props) => {
         {data?.title}
       </h2>
 
-      {/* Image */}
       {data?.image_url && (
         <div className="overflow-hidden rounded-2xl border border-white/10 shadow-inner">
           <img
@@ -72,7 +71,6 @@ export const PostDetail = ({ postId }: Props) => {
         </div>
       )}
 
-      {/* Content */}
       <p
         className="text-gray-300 text-lg leading-relaxed text-justify"
         style={{ textAlign: "justify" }}

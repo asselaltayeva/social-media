@@ -12,9 +12,9 @@ export const Navbar = () => {
   const displayName = user?.user_metadata?.user_name || user?.email;
 
   const navLinks = [
-    { to: "/", label: "Home" },
+    { to: "/", label: "Feed" },
     { to: "/create", label: "Create Post" },
-    { to: "/communities", label: "Communities" },
+    { to: "/communities", label: "Explore Tags" },
     { to: "/community/create", label: "Create Community" },
   ];
 
@@ -57,7 +57,7 @@ export const Navbar = () => {
                 <span className="text-gray-300 text-base">{displayName}</span>
                 <button
                   onClick={signOut}
-                  className="p-2 rounded hover:bg-red-500/10 hover:text-red-400 transition"
+                  className="p-1 rounded text-gray-300 hover:bg-red-500/10 hover:text-red-400 transition"
                   title="Logout"
                 >
                   <LogOut size={20} />
