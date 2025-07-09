@@ -75,7 +75,7 @@ export const LikeButton = ({ postId }: Props) => {
         onClick={() => mutate(1)}
         className={`${baseBtn} ${
           userVote === 1
-            ? "bg-gradient-to-r from-lime-600 to-green-700 text-white shadow-[0_0_8px_#22c55e]"
+            ? "bg-gradient-to-r from-lime-600 to-green-700 text-white"
             : "bg-black/30 text-green-400 cursor-pointer"
         }`}
         aria-label="Like"
@@ -87,7 +87,7 @@ export const LikeButton = ({ postId }: Props) => {
         onClick={() => mutate(-1)}
         className={`${baseBtn} ${
           userVote === -1
-            ? "bg-gradient-to-r from-red-600 to-red-800 text-white shadow-[0_0_8px_#ef4444]"
+            ? "bg-gradient-to-r from-red-600 to-red-800 text-white "
             : "bg-black/30 text-red-400 cursor-pointer"
         }`}
         aria-label="Dislike"

@@ -10,7 +10,7 @@ export const CreateCommunityPage = () => {
           {"<Create.NewCommunity/>"}
         </h2> 
         <p className="mt-2 text-sm text-gray-500 font-mono tracking-wide">
-          Start a community tag and share your thoughts and ideas with the world.
+          Start a community tag and share your thoughts with the world.
         </p>
       </div>
 

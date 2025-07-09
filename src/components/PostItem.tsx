@@ -15,7 +15,7 @@ export const PostItem = ({ post }: Props) => {
 
   return (
     <div className="relative group max-w-3xl mx-auto">
-      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-lime-900 to-green-800 blur-lg opacity-0 group-hover:opacity-40 transition duration-300 pointer-events-none" />
+      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-green-800 to-black blur-lg opacity-0 group-hover:opacity-40 transition duration-300 pointer-events-none" />
 
       <Link
         to={`/post/${post.id}`}

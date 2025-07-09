@@ -17,7 +17,7 @@ export const Footer = () => {
         </div>
 
         <div className="text-center md:text-right">
-          © {new Date().getFullYear()}
+         © Asseli {new Date().getFullYear()}
         </div>
       </div>
     </footer>

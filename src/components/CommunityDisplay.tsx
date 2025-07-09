@@ -45,8 +45,9 @@ export const CommunityDisplay = ({communityId} : Props) =>{
 
     return (
   <>
-    <div>
-      {data && data[0].communities.name}
+    <div className="text-center text-2xl font-semibold text-transparent bg-gradient-to-r from-green-400 via-white to-green-600 bg-clip-text drop-shadow-sm mb-8 tracking-tight ">
+        #{data && data[0].communities.name}
+        <div className="h-px w-1/2 mx-auto mt-2 bg-white/10" />
     </div>
 
     {data && data.length > 0 ? (
