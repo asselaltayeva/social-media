@@ -13,7 +13,12 @@ interface PostInput {
   community_id?: number | null;
 }
 
-const createPost = async (post: PostInput, imageFile: File) => {
+const createPost = async (
+  post: PostInput,
+  imageFile: File,
+  userId: string,
+  author: string
+) => {
   const filePath = `${post.title}-${Date.now()}-${imageFile.name}`;
 
   const { error: uploadError } = await supabase.storage
@@ -30,7 +35,12 @@ const createPost = async (post: PostInput, imageFile: File) => {
 
   const { data, error } = await supabase
     .from("posts")
-    .insert({ ...post, image_url: publicURLData.publicUrl });
+    .insert({
+      ...post,
+      image_url: publicURLData.publicUrl,
+      user_id: userId,
+      author: author,
+    });
 
   if (error) {
     throw new Error(error.message);
@@ -43,9 +53,9 @@ export const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [communityId, setCommunityId] = useState <number | null>(null);
+  const [communityId, setCommunityId] = useState<number | null>(null);
 
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const { data: communities } = useQuery<Community[], Error>({
     queryKey: ["communities"],
@@ -60,7 +70,12 @@ export const CreatePost = () => {
     error,
   } = useMutation({
     mutationFn: (data: { post: PostInput; imageFile: File }) =>
-      createPost(data.post, data.imageFile),
+      createPost(
+        data.post,
+        data.imageFile,
+        user?.id || "",
+        user?.user_metadata?.user_name || "Anonymous"
+      ),
     onSuccess: () => {
       setTitle("");
       setContent("");
@@ -70,12 +85,23 @@ export const CreatePost = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (!selectedFile) return;
-    mutate({ post: { 
-      title, 
-      content, 
-      avatar_url: user?.user_metadata.avatar_url || DEFAULT_AVATAR_URL,
-      community_id: communityId}, imageFile: selectedFile });
+
+    if (!user?.id || !user?.user_metadata?.user_name) {
+      alert("You must be logged in to create a post.");
+      return;
+    }
+
+    mutate({
+      post: {
+        title,
+        content,
+        avatar_url: user?.user_metadata.avatar_url || DEFAULT_AVATAR_URL,
+        community_id: communityId,
+      },
+      imageFile: selectedFile,
+    });
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +116,6 @@ export const CreatePost = () => {
         onSubmit={handleSubmit}
         className="bg-[rgba(15,15,15,0.85)] backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl p-8 space-y-8"
       >
-        
         <div className="flex items-center gap-2 font-mono text-sm text-green-400">
           <span className="text-white">&gt;</span> CreatePost()
         </div>
@@ -127,53 +152,51 @@ export const CreatePost = () => {
           <label className="block text-xs uppercase tracking-wide text-gray-400 mb-1">
             Community Tags
           </label>
-        <div className="flex flex-wrap gap-1">
-        {communities?.map((community) => {
-        const selected = communityId === community.id;
-        return (
-          <button
-            key={community.id}
-            type="button"
-            onClick={() => setCommunityId(selected ? null : community.id)}
-            className={`
-              flex items-center gap-2 px-2 py-1 rounded-sm
-              border border-transparent transition-colors duration-200
-            `}
-          >
-            <span
-              className={`
-                flex items-center justify-center w-5 h-5 rounded-sm border
-                transition-colors duration-200
-                ${selected ? "text-white" : "border-white/30"}
-              `}>
-                  {selected && <Check size={16} strokeWidth={3} />}
-                </span>
-                <span className="text-white/90 font-mono text-sm/tight whitespace-nowrap">
-                  {community.name}
-                </span>
-              </button>
-            );
-          })}
+          <div className="flex flex-wrap gap-1">
+            {communities?.map((community) => {
+              const selected = communityId === community.id;
+              return (
+                <button
+                  key={community.id}
+                  type="button"
+                  onClick={() =>
+                    setCommunityId(selected ? null : community.id)
+                  }
+                  className={`flex items-center gap-2 px-2 py-1 rounded-sm border border-transparent transition-colors duration-200`}
+                >
+                  <span
+                    className={`flex items-center justify-center w-5 h-5 rounded-sm border transition-colors duration-200 ${
+                      selected ? "text-white" : "border-white/30"
+                    }`}
+                  >
+                    {selected && <Check size={16} strokeWidth={3} />}
+                  </span>
+                  <span className="text-white/90 font-mono text-sm/tight whitespace-nowrap">
+                    {community.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    
+
         <div className="group">
-            <label className="block text-xs uppercase tracking-wide text-gray-400 mb-2">
-                Upload Image
-                </label>
-            <div className="relative w-full bg-black/30 border border-dashed border-white/10 rounded-md px-4 py-10 text-center text-gray-400 hover:border-green-500 hover:text-white transition cursor-pointer">
+          <label className="block text-xs uppercase tracking-wide text-gray-400 mb-2">
+            Upload Image
+          </label>
+          <div className="relative w-full bg-black/30 border border-dashed border-white/10 rounded-md px-4 py-10 text-center text-gray-400 hover:border-green-500 hover:text-white transition cursor-pointer">
             <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="absolute inset-0 opacity-0 cursor-pointer"
             />
             <p className="text-sm">
-            {selectedFile
+              {selectedFile
                 ? `📁 ${selectedFile.name}`
                 : "Click to upload or Drop an image"}
             </p>
-        </div>
+          </div>
         </div>
 
         <button

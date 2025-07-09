@@ -80,7 +80,7 @@ export const PostDetail = ({ postId }: Props) => {
           </div>
         )}
 
-        <div className="max-h-72 overflow-auto pr-1">
+        <div className="overflow-auto pr-1">
           <p className="text-gray-300 text-base leading-relaxed text-justify whitespace-pre-wrap">
             {data?.content}
           </p>

@@ -9,9 +9,9 @@ interface Props {
 export const PostItem = ({ post }: Props) => {
   const { user } = useAuth(); 
 
-  const avatarUrl =
-    user?.user_metadata?.avatar_url || post.avatar_url || ""; 
-  const userName = user?.user_metadata?.user_name || "Anonymous";
+  const avatarUrl =  user?.user_metadata?.avatar_url || post.avatar_url || ""; 
+  const userName = post.author || "Anonymous";
+
 
   return (
     <div className="relative group max-w-3xl mx-auto">
@@ -22,11 +22,11 @@ export const PostItem = ({ post }: Props) => {
         className="relative z-10 flex flex-col sm:flex-row w-full overflow-hidden rounded-2xl bg-black/30 backdrop-blur-md border border-white/40 hover:border-white/20 transition-shadow duration-300"
       >
         {post.image_url && (
-          <div className="sm:w-[40%] h-[200px] sm:h-auto overflow-hidden">
+          <div className="sm:w-[40%] h-[100px] sm:h-auto overflow-hidden flex-shrink-0">
             <img
               src={post.image_url}
               alt={post.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 aspect-video"
             />
           </div>
         )}

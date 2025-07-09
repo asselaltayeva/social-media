@@ -1,5 +1,4 @@
 import { PostList } from "../components/PostList";
-import { Footer } from "./Footer";
 
 export const Home = () => {
   return (
@@ -19,8 +18,6 @@ export const Home = () => {
           <PostList />
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };
