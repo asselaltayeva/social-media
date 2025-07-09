@@ -51,7 +51,7 @@ export const CommunityDisplay = ({communityId} : Props) =>{
     </div>
 
     {data && data.length > 0 ? (
-      <div>
+      <div className="space-y-6">
         {data.map((post, key) => (
           <PostItem key={key} post={post} />
         ))}
@@ -61,5 +61,4 @@ export const CommunityDisplay = ({communityId} : Props) =>{
     )}
   </>
 );
-
 };
