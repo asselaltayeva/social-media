@@ -62,7 +62,7 @@ export const CreateCommunity = () => {
             value={name}
             required
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., design, react devs, tech tips"
+            placeholder="e.g. health, wealth, mind, progress "
             className="w-full px-4 py-2 bg-black/30 border border-white/10 text-white placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition"
           />
         </div>
