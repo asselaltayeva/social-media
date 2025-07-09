@@ -46,8 +46,8 @@ export const PostDetail = ({ postId }: Props) => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto rounded-2xl bg-black/40 backdrop-blur-lg border border-white/10 p-6 shadow-xl transition-shadow duration-300 relative">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+    <div className="max-w-3xl mx-auto rounded-2xl bg-black/40 backdrop-blur-lg border border-white/10 p-4 md:p-6 shadow-xl transition-all duration-300 relative">
+      <div className="flex items-center justify-between gap-4 mb-4">
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
@@ -56,18 +56,19 @@ export const PostDetail = ({ postId }: Props) => {
           <X className="w-6 h-6 text-white" />
         </button>
 
-        <h2 className="flex-1 text-3xl font-bold text-center bg-gradient-to-r from-green-400 via-white/90 to-green-800 bg-clip-text text-transparent drop-shadow-md">
+        <h2 className="flex-1 text-lg md:text-3xl font-bold text-center bg-gradient-to-r from-green-400 via-white/90 to-green-800 bg-clip-text text-transparent drop-shadow-md">
           {data?.title}
         </h2>
 
-        <div className="h-px bg-white/10 w-full" />
-
-        <div className="w-10" />
+        <div className="w-6" />
       </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-start">
+      <div className="h-px bg-white/10 w-full mb-4" />
+
+
+      <div className="flex flex-col md:flex-row gap-6 items-start">
         {data?.image_url ? (
-          <div className="h-72 w-60 overflow-hidden rounded-xl border border-white/10 shadow-inner">
+          <div className="w-full md:w-60 h-60 md:h-72 overflow-hidden rounded-xl border border-white/10 shadow-inner flex-shrink-0">
             <img
               src={data.image_url}
               alt={data.title}
@@ -75,17 +76,19 @@ export const PostDetail = ({ postId }: Props) => {
             />
           </div>
         ) : (
-          <div className="h-72 w-60 bg-white/5 flex items-center justify-center rounded-xl border border-white/10 text-gray-500 text-sm">
+          <div className="w-full md:w-60 h-60 md:h-72 bg-white/5 flex items-center justify-center rounded-xl border border-white/10 text-gray-500 text-sm flex-shrink-0">
             No image
           </div>
         )}
 
-        <div className="overflow-auto pr-1">
-          <p className="text-gray-300 text-base leading-relaxed text-justify whitespace-pre-wrap">
+
+        <div className="w-full overflow-auto pr-1">
+          <p className="text-gray-300 text-base md:text-lg leading-relaxed text-justify whitespace-pre-wrap">
             {data?.content}
           </p>
         </div>
       </div>
+
 
       <p className="text-gray-500 text-sm text-left mt-6">
         Posted on{" "}
@@ -98,7 +101,7 @@ export const PostDetail = ({ postId }: Props) => {
         </span>
       </p>
 
-      <div className="pt-4 border-t border-white/10 mt-4">
+      <div className="pt-4 border-t border-white/10 mt-6">
         <div className="flex justify-between items-center">
           <LikeButton postId={postId} />
         </div>
