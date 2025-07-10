@@ -1,10 +1,11 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase-client";
 import { useAuth } from "../context/AuthContext";
 import { fetchCommunities, type Community } from "./CommunityList";
 const DEFAULT_AVATAR_URL = "https://eldelrdijnvrdxrlqwph.supabase.co/storage/v1/object/public/default/default.jpg";
 import { Check } from "lucide-react";
+const MAX_CONTENT_LENGTH = 550;
 
 interface PostInput {
   title: string;
@@ -52,6 +53,7 @@ const createPost = async (
 export const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [communityId, setCommunityId] = useState<number | null>(null);
 
@@ -110,6 +112,13 @@ export const CreatePost = () => {
     }
   };
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"; 
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px"; 
+    }
+  }, [content]);
+
   return (
     <div className="max-w-2xl mx-auto px-4 relative animate-fade-in">
       <form
@@ -139,13 +148,34 @@ export const CreatePost = () => {
             Content
           </label>
           <textarea
+            ref={textareaRef}
             value={content}
             required
-            rows={5}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              const input = e.target.value;
+              if (input.length <= MAX_CONTENT_LENGTH + 100) {
+                setContent(input);
+              }
+            }}          
             placeholder="Write your thoughts here..."
-            className="w-full px-4 py-2 bg-black/30 border border-white/10 text-white placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+            className="w-full px-4 py-2 bg-black/30 border border-white/10 text-white placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400 transition resize-none"
+            rows={5} 
+            style={{ overflow: "hidden" }} 
           />
+          <p
+            className={`text-xs mt-1 text-right ${
+              content.length > MAX_CONTENT_LENGTH
+                ? "text-red-400"
+                : "text-gray-400"
+            }`}
+          >
+            {content.length}/{MAX_CONTENT_LENGTH}
+          </p>
+          {content.length > MAX_CONTENT_LENGTH && (
+            <p className="text-xs text-red-400 mt-1">
+              ⚠️ Your content exceeds {MAX_CONTENT_LENGTH} characters. 
+            </p>
+          )}
         </div>
 
         <div className="group">
