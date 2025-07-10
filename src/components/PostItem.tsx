@@ -1,15 +1,13 @@
 import { Link } from "react-router";
 import type { Post } from "./PostList";
-import { useAuth } from "../context/AuthContext"; 
 
 interface Props {
   post: Post;
 }
 
 export const PostItem = ({ post }: Props) => {
-  const { user } = useAuth(); 
 
-  const avatarUrl =  user?.user_metadata?.avatar_url || post.avatar_url || ""; 
+  const avatarUrl = post.avatar_url || ""; 
   const userName = post.author || "Anonymous";
 
 
