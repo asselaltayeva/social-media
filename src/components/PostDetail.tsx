@@ -83,12 +83,18 @@ export const PostDetail = ({ postId }: Props) => {
 
 
         <div className="w-full overflow-auto pr-1">
-          <p className="text-gray-300 text-base md:text-lg leading-relaxed text-justify whitespace-pre-wrap">
-            {data?.content}
-          </p>
+        <div className="text-gray-300 text-base md:text-lg leading-relaxed text-justify space-y-4">
+          {data?.content
+            ?.split(/\r?\n+/) 
+            .filter(line => line.trim() !== "") 
+            .map((paragraph, i) => (
+            <p key={i} className="whitespace-pre-wrap">
+              {paragraph.trim()}
+            </p>
+          ))}
+          </div>
         </div>
       </div>
-
 
       <p className="text-gray-500 text-sm text-left mt-6">
         Posted on{" "}
@@ -101,8 +107,8 @@ export const PostDetail = ({ postId }: Props) => {
         </span>
       </p>
 
-      <div className="pt-4 border-t border-white/10 mt-6">
-        <div className="flex justify-between items-center">
+      <div className="pt-4 border-t border-white/10 mt-4">
+        <div className="flex justify-center items-center">
           <LikeButton postId={postId} />
         </div>
         <div className="mt-4">
