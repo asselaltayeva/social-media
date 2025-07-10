@@ -6,10 +6,14 @@ interface Props {
 }
 
 export const PostItem = ({ post }: Props) => {
-
-  const avatarUrl = post.avatar_url || ""; 
+  const avatarUrl = post.avatar_url || "";
   const userName = post.author || "Anonymous";
 
+  const getPreviewText = (text: string, maxLength: number) => {
+    if (!text) return "No content preview.";
+    const trimmed = text.slice(0, maxLength);
+    return trimmed.slice(0, trimmed.lastIndexOf(" ")) + "…";
+  };
 
   return (
     <div className="relative group max-w-3xl mx-auto">
@@ -51,19 +55,24 @@ export const PostItem = ({ post }: Props) => {
               </span>
             </div>
 
-
             <h3 className="text-xl font-semibold text-white group-hover:text-green-500 transition line-clamp-2">
-                {post.title}
-                </h3>
-            <p className="text-base text-gray-400 leading-relaxed"
-             style={{ textAlign: "justify" }}>
-            {post.content?.slice(0, 370) || "No content preview."}
-            </p>
-            </div>
+              {post.title}
+            </h3>
 
-          <div className="mt-4 flex gap-6 text-sm justify-end text-gray-500">
-            <span>❤️ {post.like_count ?? 0}</span>
-            <span>💬 {post.comment_count ?? 0}</span>
+            <p className="text-base text-gray-400 leading-relaxed text-justify">
+              {getPreviewText(post.content || "", 370)}
+            </p>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+            <div className="flex gap-4">
+              <span>❤️ {post.like_count ?? 0}</span>
+              <span>💬 {post.comment_count ?? 0}</span>
+            </div>
+            <span className="inline-flex items-center gap-1 text-gray-400 font-mono group-hover:underline decoration-gray-400 underline-offset-4 transition">
+              Read more →
+            </span>
+
           </div>
         </div>
       </Link>

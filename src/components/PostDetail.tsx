@@ -46,7 +46,7 @@ export const PostDetail = ({ postId }: Props) => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto rounded-2xl bg-black/40 backdrop-blur-lg border border-white/10 p-4 md:p-6 shadow-xl transition-all duration-300 relative">
+    <div className="max-w-3xl mx-auto rounded-2xl bg-black/40 backdrop-blur-lg border border-white/10 p-4 md:p-6 shadow-xl  relative">
       <div className="flex items-center justify-between gap-4 mb-4">
         <button
           onClick={() => navigate(-1)}
@@ -56,9 +56,9 @@ export const PostDetail = ({ postId }: Props) => {
           <X className="w-6 h-6 text-white" />
         </button>
 
-        <h2 className="flex-1 text-lg md:text-3xl font-bold text-center bg-gradient-to-r from-green-400 via-white/90 to-green-800 bg-clip-text text-transparent drop-shadow-md">
-          {data?.title}
-        </h2>
+        <h2 className="text-center text-xl md:text-3xl font-bold bg-gradient-to-r bg-clip-text text-white drop-shadow-md">
+    {data?.title}
+  </h2>
 
         <div className="w-6" />
       </div>
