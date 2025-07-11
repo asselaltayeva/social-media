@@ -153,7 +153,7 @@ export const CreatePost = () => {
             required
             onChange={(e) => {
               const input = e.target.value;
-              if (input.length <= MAX_CONTENT_LENGTH + 100) {
+              if (input.length <= MAX_CONTENT_LENGTH + 50) {
                 setContent(input);
               }
             }}          
@@ -173,7 +173,7 @@ export const CreatePost = () => {
           </p>
           {content.length > MAX_CONTENT_LENGTH && (
             <p className="text-xs text-red-400 mt-1">
-              ⚠️ Your content exceeds {MAX_CONTENT_LENGTH} characters. 
+              ⚠️ Ops, your content exceeds {MAX_CONTENT_LENGTH} characters...
             </p>
           )}
         </div>
@@ -201,7 +201,7 @@ export const CreatePost = () => {
                   >
                     {selected && <Check size={16} strokeWidth={3} />}
                   </span>
-                  <span className="text-white/90 font-mono text-sm/tight whitespace-nowrap">
+                  <span className="text-gray-300 text-sm/tight whitespace-nowrap">
                     {community.name}
                   </span>
                 </button>

@@ -69,7 +69,7 @@ export const PostItem = ({ post }: Props) => {
               <span>❤️ {post.like_count ?? 0}</span>
               <span>💬 {post.comment_count ?? 0}</span>
             </div>
-            <span className="inline-flex items-center gap-1 text-gray-400 font-mono group-hover:underline decoration-gray-400 underline-offset-4 transition">
+            <span className="inline-flex items-center gap-1 text-gray-400 group-hover:underline decoration-gray-400 underline-offset-4 transition">
               Read more →
             </span>
 

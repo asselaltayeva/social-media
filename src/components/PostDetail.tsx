@@ -56,7 +56,7 @@ export const PostDetail = ({ postId }: Props) => {
           <X className="w-6 h-6 text-white" />
         </button>
 
-        <h2 className="text-center text-xl md:text-3xl font-bold bg-gradient-to-r bg-clip-text text-white drop-shadow-md">
+        <h2 className="text-center text-base sm:text-lg md:text-xl font-semibold leading-relaxed text-white">
     {data?.title}
   </h2>
 

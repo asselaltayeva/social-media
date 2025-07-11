@@ -10,7 +10,7 @@ export const CreatePostPage = () => {
           {"<Create.NewPost />"}
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-gray-500 font-mono tracking-wide">
-            Write something worth sharing with the world.
+            Write something and share with the world.
           </p>
           </div>
 
